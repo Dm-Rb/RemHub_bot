@@ -28,7 +28,7 @@ async def process_start_command(message: types.Message):
 
     photo = InputFile(join("media", "example.png"))
     await message.answer(text=mes['start_message'])
-    await asyncio.sleep(3)
+    await asyncio.sleep(2)
 
     if data_base.check_user_id_exist(message.from_user.id):
         await message.answer(text=mes['auth_message_exist'])
@@ -73,12 +73,22 @@ async def process_del_command(message: types.Message):
         await message.answer(text=mes['del_yourself_message_false'])
 
 
+@dp.message_handler(commands="support")
+async def process_del_command(message: types.Message):
+    await message.answer('Сообщить о некорректной работе бота\n<a href="https://t.me/two_and_two_isnt_five">Контакт</a>')
+
+
+
 @dp.message_handler()
 async def send_notification_to_users():
     queue: list = create_list_of_obj_for_output_bot(data_base)
     if queue:
         for obj in queue:
-            await bot.send_message(chat_id=obj['user_id'], text=obj['message'])
+            try:
+                await bot.send_message(chat_id=obj['user_id'], text=obj['message'])
+            except:
+                continue
+
 
 
 async def scheduler():

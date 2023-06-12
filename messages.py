@@ -1,10 +1,13 @@
+import emoji
+
+
 messages = {
     'start_message':
         'Этот бот будет уведомлять вас о новых тикетах в <a href="http://support.srv/jira"><b><u>support.srv</u></b></a>, обновлениях статусов и комментариях.\nПройдите авторизацию для продолжения...',
     'auth_message':
         'Отправте боту ваш <u>персональный токен авторизации</u> из <b>support.srv</b>.\nДля получения токена необходимо:\n\n<i>В верхнем правом углу вашего <a href="http://support.srv/jira">аккаутна</a> перейти во вкладку</i> <b>Профиль</b>\n\n<i>В левой панели выберите вкладку</i> <b>Персональные токены доступа</b> <i>,далее кнопка</i> <b>Создать токен</b>\n\n<i>Придумайте имя и уберите галочку в чек-боксе <u>Автоматическое окончание срока действия</u></i>',
     'auth_message_exist':
-        'Ваш токен авторизации <a href="http://support.srv/jira"><b><u>support.srv</u></b></a> уже присутствует в боте. В случае смены токена удалите свои данные  (/del_stop)  и пройдите авторизацию заново (/start)',
+        'Ваш токен авторизации <a href="http://support.srv/jira"><b>support.srv</b></a> уже присутствует в боте. В случае смены токена удалите свои данные  (/del_stop)  и пройдите авторизацию заново (/start)',
     'auth_success_message':
         'Теперь вы будете получать уведомления от бота',
     'auth_fall_message':
@@ -25,15 +28,15 @@ def generate_notification_mesage(data):
     comments = data['details']["comments"]
 
     if data_type_notification == 'new_issue':
-        header_text = f'<b>Добавлено новое <a href="{permalink}">задание</a>:</b>\n'
+        header_text = f'{emoji.emojize(":NEW_button:", language="en")} <b>Добавлено новое <a href="{permalink}">задание</a>:</b>\n'
     elif data_type_notification == 'update_status':
-        header_text = f'<b>Обновлён статус <a href="{permalink}">задания</a>:</b>\n'
+        header_text = f'{emoji.emojize(":counterclockwise_arrows_button:", language="en")} <b>Обновлён статус <a href="{permalink}">задания</a>:</b>\n'
     elif data_type_notification == 'client_update_status':
-        header_text = f'<b>Cтатус <a href="{permalink}"> вашего задания</a> обновлён:</b>\n'
+        header_text = f'{emoji.emojize(":counterclockwise_arrows_button:", language="en")} <b>Cтатус <a href="{permalink}"> вашего задания</a> обновлён:</b>\n'
     elif data_type_notification == 'new_comment':
-        header_text = f'<b><i>{comments["dilayName"]}</i> добавил(а) новый комментарий <a href="{permalink}">в задании</a>:</b>\n'
+        header_text = f'{emoji.emojize(":speech_balloon:", language="en")} <b><i>{comments["dilayName"]}</i> добавил(а) новый комментарий <a href="{permalink}">в задании</a>:</b>\n'
     elif data_type_notification == 'client_new_comment':
-        header_text = f'<b><i>{comments["dilayName"]}</i> добавил(а) новый комментарий в <a href="{permalink}">вашем задании</a>:</b>\n'
+        header_text = f'{emoji.emojize(":speech_balloon:", language="en")} <b><i>{comments["dilayName"]}</i> добавил(а) новый комментарий в <a href="{permalink}">вашем задании</a>:</b>\n'
     else:
         header_text = "Ошибка формирования ответа"
 
@@ -54,11 +57,3 @@ def generate_notification_mesage(data):
         text = text + f"Комментарий: <i>{comment_body}</i>"
 
     return text
-
-
-
-
-
-
-
-
