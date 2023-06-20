@@ -160,7 +160,9 @@ def filter_update_status_attachement(user_id, user_name, details_upd, details_db
         # ##END block: Client
 
         # ##block: Assignee
-        if details_upd['assignee'] == 'Не выбран':
+        if details_upd['assignee'] == 'Не выбран' or (details_upd['status'] == 'Решен'
+                                                      and details_upd['assignee'] != user_name
+                                                      and details_upd['creator'] != user_name):
             data['type_notification'] = 'update_status'
             cur_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
             if (cur_user_message not in messages_pool) and (cur_user_message not in result):
@@ -168,12 +170,12 @@ def filter_update_status_attachement(user_id, user_name, details_upd, details_db
         # ##END block: Assignee
 
         #  Дополнительное условие. Оповещение всех (кроме клиентов и исполнителя если он задан)
-        elif details_upd['status'] == 'Решен':
-            if details_upd['assignee'] != user_name:
-                data['type_notification'] = 'update_status'
-                cur2_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
-                if (cur2_user_message not in messages_pool) and (cur2_user_message not in result):
-                    result.append(cur2_user_message)
+        # elif details_upd['status'] == 'Решен':
+        #     if details_upd['assignee'] != user_name:
+        #         data['type_notification'] = 'update_status'
+        #         cur2_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
+        #         if (cur2_user_message not in messages_pool) and (cur2_user_message not in result):
+        #             result.append(cur2_user_message)
 
 
         if bool(result):
