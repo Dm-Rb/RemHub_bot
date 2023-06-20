@@ -155,7 +155,7 @@ def filter_update_status_attachement(user_id, user_name, details_upd, details_db
             data['type_notification'] = 'client_update_status'
             client_message = {'user_id': client_id, 'message': generate_notification_mesage(data)}
             #  проверяем, есть ли клиетская мессага в пуле мессаг
-            if client_message not in messages_pool:
+            if (client_message not in messages_pool) and (client_message not in result):
                 result.append(client_message)
         # ##END block: Client
 
@@ -163,14 +163,15 @@ def filter_update_status_attachement(user_id, user_name, details_upd, details_db
         if details_upd['assignee'] == 'Не выбран':
             data['type_notification'] = 'update_status'
             cur_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
-            result.append(cur_user_message)
+            if (cur_user_message not in messages_pool) and (cur_user_message not in result):
+                result.append(cur_user_message)
         # ##END block: Assignee
 
         #  Дополнительное условие. Оповещение всех (кроме клиентов и исполнителя если он задан)
         elif details_upd['status'] == 'Решен' and (details_upd['assignee'] != user_name and details_upd['assignee'] != 'Не выбран'):
             data['type_notification'] = 'update_status'
             cur_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
-            if cur_user_message not in messages_pool:
+            if (cur_user_message not in messages_pool) and (cur_user_message not in result):
                 result.append(cur_user_message)
 
         if bool(result):
