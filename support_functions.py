@@ -167,10 +167,10 @@ def filter_update_status_attachement(user_id, user_name, details_upd, details_db
         # ##END block: Assignee
 
         #  Дополнительное условие. Оповещение всех (кроме клиентов и исполнителя если он задан)
-        if details_upd['status'] == 'Решен' and (details_upd['assignee'] != user_name and details_upd['assignee'] != 'Не выбран'):
-            data['type_notification'] = 'update_status'
-            cur_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
-            result.append(cur_user_message)
+        # if details_upd['status'] == 'Решен' and (details_upd['assignee'] != user_name and details_upd['assignee'] != 'Не выбран'):
+        #     data['type_notification'] = 'update_status'
+        #     cur_user_message = {'user_id': user_id, 'message': generate_notification_mesage(data)}
+        #     result.append(cur_user_message)
 
         if bool(result):
             return result
