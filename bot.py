@@ -82,6 +82,7 @@ async def process_del_command(message: types.Message):
 @dp.message_handler()
 async def send_notification_to_users():
     queue: list = create_list_of_obj_for_output_bot(data_base)
+    queue = [dict(s) for s in set(frozenset(d.items()) for d in queue)]  # костыль, убираем дубликаты сообщений
     if queue:
         for obj in queue:
             try:
