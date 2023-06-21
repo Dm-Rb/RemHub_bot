@@ -87,9 +87,8 @@ async def send_notification_to_users():
         for obj in queue:
             try:
                 await bot.send_message(chat_id=obj['user_id'], text=obj['message'])
-            except:
+            except Exception:
                 continue
-
 
 
 async def scheduler():
