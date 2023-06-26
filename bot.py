@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InputFile
-from support_functions import get_username_from_jira, get_issues_from_jira, create_list_of_obj_for_output_bot
+from support_functions import get_username_from_jira, get_issues_from_jira, create_list_of_obj_for_output_bot, remove_duble_messages
 from custom_classes import Database, UserState
 import aioschedule
 from messages import messages as mes
@@ -82,7 +82,7 @@ async def process_del_command(message: types.Message):
 @dp.message_handler()
 async def send_notification_to_users():
     queue: list = create_list_of_obj_for_output_bot(data_base)
-    queue = [dict(s) for s in set(frozenset(d.items()) for d in queue)]  # костыль, убираем дубликаты сообщений
+    queue = remove_duble_messages(queue)
     if queue:
         for obj in queue:
             try:

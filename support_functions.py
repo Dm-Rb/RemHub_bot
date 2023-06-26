@@ -4,8 +4,10 @@ from messages import generate_notification_mesage
 from config import Config, load_config
 
 
+
 config: Config = load_config()
 SERVER: str = config.server_url.url
+last_queue = [] # массив для хранения пула мессаг
 
 
 def get_username_from_jira(token: str):
@@ -225,3 +227,30 @@ def filter_new_comments_attachement(user_id, user_name, details_upd, details_db,
         return result
     else:
         return None
+
+
+def remove_duble_messages(queue: list):
+    # костыль, убирает дубли
+
+    global last_queue
+
+    #queue = [dict(s) for s in set(frozenset(d.items()) for d in queue)]
+
+    unique_queue = []
+
+    for dict_item in queue:
+        if dict_item not in unique_queue:
+            unique_queue.append(dict_item)
+
+    rmv_elems = []
+    for elem in unique_queue:
+        if elem in last_queue:
+            rmv_elems.append(elem)
+    if bool(rmv_elems):
+        for elem in rmv_elems:
+            unique_queue.remove(elem)
+    last_queue.clear()
+    last_queue = unique_queue.copy()
+
+    return unique_queue
+
