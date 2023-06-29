@@ -121,20 +121,22 @@ def create_list_of_obj_for_output_bot(data_base):
 
 def filter_new_issue_attachement(user_id, user_name, issue_details):
 
-    data = {
-            'myself_name': user_name,
-            'type_notification': 'new_issue',
-            'details': issue_details
-            }
+    if issue_details['status'] != 'Отменено':
 
-    if issue_details['assignee'] == 'Не выбран' and issue_details['creator'] != user_name:
-        return {'user_id': user_id, 'message': generate_notification_mesage(data)}
+        data = {
+                'myself_name': user_name,
+                'type_notification': 'new_issue',
+                'details': issue_details
+                }
 
-    elif issue_details['assignee'] == user_name:
-        return {'user_id': user_id, 'message': generate_notification_mesage(data)}
+        if issue_details['assignee'] == 'Не выбран' and issue_details['creator'] != user_name:
+            return {'user_id': user_id, 'message': generate_notification_mesage(data)}
 
-    else:
-        return None
+        elif issue_details['assignee'] == user_name:
+            return {'user_id': user_id, 'message': generate_notification_mesage(data)}
+
+        else:
+            return None
 
 
 def filter_update_status_attachement(user_id, user_name, details_upd, details_db, data_base, messages_pool):
@@ -192,10 +194,11 @@ def filter_new_comments_attachement(user_id, user_name, details_upd, details_db,
         'myself_name': user_name,
         'details': details_upd}
 
-    if details_upd['comment_total'] != details_db['comment_total']:
+    if details_upd['comment_total'] != details_db['comment_total'] and len(details_upd['comments']) > 0:
+
+
         new_comment = details_upd['comments'][int(details_upd['comment_total']) - 1]  # Индекс последнего коммента в списке
         data['details']['comments'] = new_comment
-
         # ##block: Client
 
         #  Если автор коммента не клиент - оповещение клиенту
@@ -249,8 +252,10 @@ def remove_duble_messages(queue: list):
     if bool(rmv_elems):
         for elem in rmv_elems:
             unique_queue.remove(elem)
-    last_queue.clear()
-    last_queue = unique_queue.copy()
+
+    last_queue.extend(unique_queue)
+    if len(last_queue) >= 100:
+        last_queue = last_queue[50:]
 
     return unique_queue
 

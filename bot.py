@@ -26,7 +26,8 @@ dp = Dispatcher(bot, storage=storage)
 @dp.message_handler(commands="start")
 async def process_start_command(message: types.Message):
 
-    photo = InputFile(join("media", "example.png"))
+    photo_1 = InputFile(join("media", "example.png"))
+    photo_2 = InputFile(join("media", "example2.png"))
     await message.answer(text=mes['start_message'])
     await asyncio.sleep(2)
 
@@ -36,7 +37,10 @@ async def process_start_command(message: types.Message):
     else:
         await UserState.jira_token.set()  # set state
         await message.answer(text=mes['auth_message'])
-        await bot.send_photo(photo=photo, chat_id=message.from_user.id)
+        await bot.send_photo(photo=photo_1, chat_id=message.from_user.id)
+        await asyncio.sleep(1)
+        await message.answer(text='или')
+        await bot.send_photo(photo=photo_2, chat_id=message.from_user.id)
 
 
 # If auth successfully
